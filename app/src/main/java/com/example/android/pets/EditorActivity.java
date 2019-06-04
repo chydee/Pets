@@ -1,10 +1,13 @@
 
 package com.example.android.pets;
 
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +17,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.example.android.pets.data.PetContract.PetsEntry;
+import com.example.android.pets.data.PetsDbHelper;
 
 
 /**
@@ -33,6 +37,8 @@ public class EditorActivity extends AppCompatActivity {
     /** EditText field to enter the pet's gender */
     private Spinner mGenderSpinner;
 
+    private PetsDbHelper dbHelper;
+
     /**
      * Gender of the pet. The possible values are:
      * 0 for unknown gender, 1 for male, 2 for female.
@@ -43,6 +49,8 @@ public class EditorActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
+
+        dbHelper = new PetsDbHelper(this);
 
         // Find all relevant views that we will need to read user input from
         mNameEditText = findViewById(R.id.edit_pet_name);
@@ -92,6 +100,27 @@ public class EditorActivity extends AppCompatActivity {
         });
     }
 
+    //Get user input from EditorActivity and save it to the database
+    private void insertPet(){
+        String nameString = mNameEditText.getText().toString().trim();
+        String breedString = mBreedEditText.getText().toString().trim();
+        String weightString = mWeightEditText.getText().toString().trim();
+        String genderString = mGenderSpinner.getSelectedItem().toString().trim();
+
+
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(PetsEntry.COLUMN_NAME, nameString);
+        values.put(PetsEntry.COLUMN_BREED, breedString);
+        values.put(PetsEntry.COLUMN_GENDER, genderString);
+        values.put(PetsEntry.COLUMN_WEIGHT, Integer.parseInt(weightString));
+
+        long newRowId = db.insert(PetsEntry.TABLE_NAME, null, values);
+
+        Log.d("EditorActivity", "New Row Id: "+ newRowId);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu options from the res/menu/menu_editor.xml file.
@@ -106,7 +135,10 @@ public class EditorActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             // Respond to a click on the "Save" menu option
             case R.id.action_save:
-                // Do nothing for now
+                // Save pets entry to database
+                insertPet();
+                //Exit activity on save
+                finish();
                 return true;
             // Respond to a click on the "Delete" menu option
             case R.id.action_delete:
