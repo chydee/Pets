@@ -102,26 +102,32 @@ public class EditorActivity extends AppCompatActivity {
 
     //Get user input from EditorActivity and save it to the database
     private void insertPet(){
+        // Read from input fields
+        // Use trim to eliminate leading or trailing white space
         String nameString = mNameEditText.getText().toString().trim();
         String breedString = mBreedEditText.getText().toString().trim();
         String weightString = mWeightEditText.getText().toString().trim();
         String genderString = mGenderSpinner.getSelectedItem().toString().trim();
 
-
+        // Gets the database in write mode
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
+        // Create a ContentValues object where column names are the keys,
+        // and pet attributes from the editor are the values.
         ContentValues values = new ContentValues();
         values.put(PetsEntry.COLUMN_NAME, nameString);
         values.put(PetsEntry.COLUMN_BREED, breedString);
         values.put(PetsEntry.COLUMN_GENDER, genderString);
         values.put(PetsEntry.COLUMN_WEIGHT, Integer.parseInt(weightString));
 
+
+        // Insert a new row for pet in the database, returning the ID of that new row.
         long newRowId = db.insert(PetsEntry.TABLE_NAME, null, values);
 
         if (newRowId == 1){
-            Toast.makeText(this, "Pet saved with id: "+ newRowId, Toast.LENGTH_SHORT);
+            Toast.makeText(this, "Pet saved with id: "+ newRowId, Toast.LENGTH_SHORT).show();
         }else {
-            Toast.makeText(this, "Error saving pet ", Toast.LENGTH_SHORT);
+            Toast.makeText(this, "Error saving pet ", Toast.LENGTH_SHORT).show();
         }
     }
 
