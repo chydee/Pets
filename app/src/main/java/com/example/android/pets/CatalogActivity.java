@@ -4,7 +4,7 @@ package com.example.android.pets;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -129,8 +129,7 @@ public class CatalogActivity extends AppCompatActivity {
      * Helper method to insert hardcoded pet data into the database. For debugging purposes only.
      */
     private void insertPet(){
-        // Gets the data repository in write mode
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        Uri newUri;
 
         //Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
@@ -147,7 +146,7 @@ public class CatalogActivity extends AppCompatActivity {
         // this is set to "null", then the framework will not insert a row when
         // there are no values).
         // The third argument is the ContentValues object containing the info for Toto.
-        long newRowId = db.insert(PetsEntry.TABLE_NAME, null, values);
+        newUri = getContentResolver().insert(PetsEntry.CONTENT_URI, values);
     }
 
     @Override
