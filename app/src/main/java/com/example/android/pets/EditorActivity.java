@@ -1,7 +1,6 @@
 
 package com.example.android.pets;
 
-import android.content.ContentUris;
 import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Bundle;
@@ -110,9 +109,6 @@ public class EditorActivity extends AppCompatActivity {
         String weightString = mWeightEditText.getText().toString().trim();
         String genderString = mGenderSpinner.getSelectedItem().toString().trim();
 
-        Uri newUri;
-
-
         // Create a ContentValues object where column names are the keys,
         // and pet attributes from the editor are the values.
         ContentValues values = new ContentValues();
@@ -121,14 +117,14 @@ public class EditorActivity extends AppCompatActivity {
         values.put(PetsEntry.COLUMN_GENDER, genderString);
         values.put(PetsEntry.COLUMN_WEIGHT, Integer.parseInt(weightString));
 
-        newUri = getContentResolver().insert(PetsEntry.CONTENT_URI, values);
-        long newRowId = new Long(ContentUris.parseId(newUri));
+        Uri newUri = getContentResolver().insert(PetsEntry.CONTENT_URI, values);
 
 
-        if (newRowId == 1){
-            Toast.makeText(this, getString(R.string.saved)+ newRowId, Toast.LENGTH_SHORT).show();
-        }else {
+
+        if (newUri == null){
             Toast.makeText(this, getString(R.string.cantSave), Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(this, getString(R.string.saved), Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -124,7 +124,6 @@ public class CatalogActivity extends AppCompatActivity {
      * Helper method to insert hardcoded pet data into the database. For debugging purposes only.
      */
     private void insertPet(){
-        Uri newUri;
 
         //Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
@@ -141,7 +140,7 @@ public class CatalogActivity extends AppCompatActivity {
         // this is set to "null", then the framework will not insert a row when
         // there are no values).
         // The third argument is the ContentValues object containing the info for Toto.
-        newUri = getContentResolver().insert(PetsEntry.CONTENT_URI, values);
+        Uri newUri = getContentResolver().insert(PetsEntry.CONTENT_URI, values);
     }
 
     @Override
