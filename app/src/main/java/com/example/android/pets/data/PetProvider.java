@@ -231,14 +231,18 @@ public class PetProvider extends ContentProvider {
             throw new IllegalArgumentException("Pets weight must be a positive value ");
         }
 
+        // No need to check the breed, any value is valid (including null).
+
+        // If there are no values to update, then don't try to update the database
+        if (values.size() == 0) {
+            return 0;
+        }
+
         //Get a writeable database
         SQLiteDatabase database = dbHelper.getWritableDatabase();
         //  Update the selected pets in the pets database table with the given ContentValues
         //Update the pets table or a single pet with the given value
-         database.update(PetsEntry.TABLE_NAME, values, selection, selectionArgs);
+        return database.update(PetsEntry.TABLE_NAME, values, selection, selectionArgs);
 
-
-        // TODO: Return the number of rows that were affected
-        return 0;
     }
 }
