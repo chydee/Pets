@@ -86,7 +86,7 @@ public class PetProvider extends ContentProvider {
                 // projection, selection, selection arguments, and sort order. The cursor
                 // could contain multiple rows of the pets table.
                 // Perform database query on pets table
-                cursor = db.query(PetsEntry.TABLE_NAME, projection, null, null, null, null, null);
+                cursor = db.query(PetsEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
             case PET_ID:
                 /**
