@@ -145,6 +145,7 @@ public class PetProvider extends ContentProvider {
      */
     private Uri insertPet(Uri uri, ContentValues values) {
 
+        //Get Writeable database
         SQLiteDatabase database = dbHelper.getWritableDatabase();
 
         /*
@@ -156,8 +157,10 @@ public class PetProvider extends ContentProvider {
         values.put(PetsEntry.COLUMN_GENDER, PetsEntry.GENDER_MALE);
         values.put(PetsEntry.COLUMN_WEIGHT, 7);
 
+        // Insert the new pet with the given values
         long id = database.insert(PetsEntry.TABLE_NAME, null, values);
 
+        // If the ID is -1, then the insertion failed. Log an error and return null.
         if (id == -1){
         Log.e(LOG_TAG, "Failed to insert row for " + uri);
         return null;
