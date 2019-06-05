@@ -215,7 +215,28 @@ public class PetProvider extends ContentProvider {
      */
     private int updatePet(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
 
-        // TODO: Update the selected pets in the pets database table with the given ContentValues
+        //Sanity Checks
+        String name = values.getAsString(PetsEntry.COLUMN_NAME);
+        //Checks if the name is empty
+        if (name == null){
+            throw new IllegalArgumentException("Pet name is requires");
+        }
+        Integer gender = values.getAsInteger(PetsEntry.COLUMN_GENDER);
+        //Checks if the gender is valid
+        if (gender == null || !PetsEntry.isValidGender(gender)){
+            throw new IllegalArgumentException("Pet gender must be valid");
+        }
+        Integer weight = values.getAsInteger(PetsEntry.COLUMN_WEIGHT);
+        if (weight < 0 || weight == null){
+            throw new IllegalArgumentException("Pets weight must be a positive value ");
+        }
+
+        //Get a writeable database
+        SQLiteDatabase database = dbHelper.getWritableDatabase();
+        //  Update the selected pets in the pets database table with the given ContentValues
+        //Update the pets table or a single pet with the given value
+         database.update(PetsEntry.TABLE_NAME, values, selection, selectionArgs);
+
 
         // TODO: Return the number of rows that were affected
         return 0;
