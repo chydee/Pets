@@ -56,9 +56,6 @@ public class CatalogActivity extends AppCompatActivity {
      * the pets database.
      */
     private void displayDatabaseInfo() {
-        // To access our database, we instantiate our subclass of SQLiteOpenHelper
-        // and pass the context, which is the current activity.
-        PetsDbHelper mDbHelper = new PetsDbHelper(this);
 
         //Projection
         String[] projection = {
@@ -81,11 +78,11 @@ public class CatalogActivity extends AppCompatActivity {
         );*/
 
         Cursor cursor = getContentResolver().query(
-                PetsEntry.CONTENT_URI,
-                projection,
-                null,
-                null,
-                null
+                PetsEntry.CONTENT_URI,     //The Content URI
+                projection,                //Column to return for each row
+                null,           //Selection Criteria
+                null,       //Selection Criteria
+                null           //The sort order of the returned row
         );
         TextView displayView = findViewById(R.id.text_view_pet);
         try {
