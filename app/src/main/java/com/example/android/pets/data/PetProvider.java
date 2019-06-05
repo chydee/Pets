@@ -3,6 +3,7 @@ package com.example.android.pets.data;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
 
@@ -15,6 +16,33 @@ public class PetProvider extends ContentProvider {
     //Tag for log messages
     private static final String LOG_TAG = PetProvider.class.getName();
     private PetsDbHelper dbHelper;
+
+    //Codes or CASES
+    private static final int PETS = 100;
+    private static final int PET_ID = 101;
+
+    //UriMatcher Object
+    private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+
+    static {
+        /*
+         * The calls to addURI() go here, for all of the content URI patterns that the provider
+         * should recognize. For this snippet, only the calls for the petsTable are shown.
+         */
+
+        /*
+         * Sets the integer value for multiple rows in table 3 to 1. Notice that no wildcard is used
+         * in the path
+         */
+        sUriMatcher.addURI(PetContract.CONTACT_AUTHORITY, PetContract.PATH_PETS, PETS);
+
+        /*
+         * Sets the code for a single row to 2. In this case, the "#" wildcard is
+         * used. "content://com.example.android.pets/pets/3" matches, but
+         * "content://com.example.android.pets/pets doesn't.
+         */
+        sUriMatcher.addURI(PetContract.CONTACT_AUTHORITY, PetContract.PATH_PETS + "/#", PET_ID);
+    }
 
     /**
      * Initialize the provider and the databaseHelper object
