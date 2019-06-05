@@ -61,8 +61,8 @@ public class PetCursorAdapter extends CursorAdapter {
         TextView summaryTextView = view.findViewById(R.id.summary);
 
         // Exrtract properties from cursor
-        String name = cursor.getString(cursor.getColumnIndexOrThrow(PetsEntry.COLUMN_NAME));
-        String summary = cursor.getString(cursor.getColumnIndexOrThrow(PetsEntry.COLUMN_BREED));
+        int name = cursor.getColumnIndex(PetsEntry.COLUMN_NAME);
+        int summary = cursor.getColumnIndex(PetsEntry.COLUMN_BREED);
 
         //Populate field with extracted properties
         nameTextView.setText(name);
