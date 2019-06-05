@@ -147,16 +147,6 @@ public class PetProvider extends ContentProvider {
 
         //Get Writeable database
         SQLiteDatabase database = dbHelper.getWritableDatabase();
-
-        /*
-         * Sets the values of each column and inserts the word. The arguments to the "put"
-         * method are "column name" and "value"
-         */
-        values.put(PetsEntry.COLUMN_NAME, "Toto");
-        values.put(PetsEntry.COLUMN_BREED, "Terrier");
-        values.put(PetsEntry.COLUMN_GENDER, PetsEntry.GENDER_MALE);
-        values.put(PetsEntry.COLUMN_WEIGHT, 7);
-
         // Insert the new pet with the given values
         long id = database.insert(PetsEntry.TABLE_NAME, null, values);
 
