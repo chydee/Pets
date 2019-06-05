@@ -39,14 +39,14 @@ public class PetProvider extends ContentProvider {
          * Sets the integer value for multiple rows in table 3 to 1. Notice that no wildcard is used
          * in the path
          */
-        sUriMatcher.addURI(PetContract.CONTACT_AUTHORITY, PetContract.PATH_PETS, PETS);
+        sUriMatcher.addURI(PetContract.CONTENT_AUTHORITY, PetContract.PATH_PETS, PETS);
 
         /*
          * Sets the code for a single row to 2. In this case, the "#" wildcard is
          * used. "content://com.example.android.pets/pets/3" matches, but
          * "content://com.example.android.pets/pets doesn't.
          */
-        sUriMatcher.addURI(PetContract.CONTACT_AUTHORITY, PetContract.PATH_PETS + "/#", PET_ID);
+        sUriMatcher.addURI(PetContract.CONTENT_AUTHORITY, PetContract.PATH_PETS + "/#", PET_ID);
     }
 
     /**
