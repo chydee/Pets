@@ -117,13 +117,13 @@ public class EditorActivity extends AppCompatActivity {
         values.put(PetsEntry.COLUMN_GENDER, genderString);
         values.put(PetsEntry.COLUMN_WEIGHT, Integer.parseInt(weightString));
 
+        // Insert a new pet into the provider, returning the content URI for the new pet.
         Uri newUri = getContentResolver().insert(PetsEntry.CONTENT_URI, values);
-
-
-
+        // If the new content URI is null, then there was an error with insertion.
         if (newUri == null){
             Toast.makeText(this, getString(R.string.cantSave), Toast.LENGTH_SHORT).show();
         }else {
+            // Otherwise, the insertion was successful and we can display a toast.
             Toast.makeText(this, getString(R.string.saved), Toast.LENGTH_SHORT).show();
         }
     }
