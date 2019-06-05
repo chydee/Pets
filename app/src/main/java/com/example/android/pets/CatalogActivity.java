@@ -60,17 +60,6 @@ public class CatalogActivity extends AppCompatActivity {
                 PetsEntry.COLUMN_GENDER, PetsEntry.COLUMN_WEIGHT
         };
 
-        // Perform this raw SQL query "SELECT * FROM pets"
-        // to get a Cursor that contains all rows from the pets table.
-        /**Cursor cursor = db.query(
-                PetsEntry.TABLE_NAME,
-                projection,
-                null,
-                null,
-                null,
-                null,
-                null
-        );*/
 
         Cursor cursor = getContentResolver().query(
                 PetsEntry.CONTENT_URI,     //The Content URI
@@ -85,33 +74,6 @@ public class CatalogActivity extends AppCompatActivity {
         PetCursorAdapter cursorAdapter = new PetCursorAdapter(this, cursor);
         //Attach cursor adapter to listView
         listView.setAdapter(cursorAdapter);
-
-        try {
-            // Create a header in the Text View that looks like this:
-            //
-            // The pets table contains <number of rows in Cursor> pets.
-            // _id - name - breed - gender - weight
-            //
-            // In the while loop below, iterate through the rows of the cursor and display
-            // the information from each column in this order.
-
-            // Figure out the index of each column
-            int nameColumnIndex = cursor.getColumnIndex(PetsEntry.COLUMN_NAME);
-            int breedColumnIndex = cursor.getColumnIndex(PetsEntry.COLUMN_BREED);
-
-            // Iterate through all the returned rows in the cursor
-            while (cursor.moveToNext()) {
-                // Use that index to extract the String or Int value of the word
-                // at the current row the cursor is on.
-                String currentName = cursor.getString(nameColumnIndex);
-                String currentBreed = cursor.getString(breedColumnIndex);
-
-            }
-        }finally{
-                // Always close the cursor when you're done reading from it. This releases all its
-                // resources and makes it invalid.
-                cursor.close();
-            }
     }
 
     /**
