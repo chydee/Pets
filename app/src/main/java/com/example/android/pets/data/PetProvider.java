@@ -8,6 +8,7 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.util.Log;
 
 import com.example.android.pets.data.PetContract.PetsEntry;
 
@@ -144,19 +145,26 @@ public class PetProvider extends ContentProvider {
      */
     private Uri insertPet(Uri uri, ContentValues values) {
 
+        SQLiteDatabase database = dbHelper.getWritableDatabase();
+
         /*
          * Sets the values of each column and inserts the word. The arguments to the "put"
          * method are "column name" and "value"
          */
-        values.put(PetsEntry.COLUMN_NAME, "" );
-        values.put(PetsEntry.COLUMN_BREED, "");
-        values.put(PetsEntry.COLUMN_GENDER, "");
-        values.put(PetsEntry.COLUMN_WEIGHT, "");
+        values.put(PetsEntry.COLUMN_NAME, "Toto");
+        values.put(PetsEntry.COLUMN_BREED, "Terrier");
+        values.put(PetsEntry.COLUMN_GENDER, PetsEntry.GENDER_MALE);
+        values.put(PetsEntry.COLUMN_WEIGHT, 7);
 
-        long newRowId = Long.parseLong(null);
+        long id = database.insert(PetsEntry.TABLE_NAME, null, values);
+
+        if (id == -1){
+        Log.e(LOG_TAG, "Failed to insert row for " + uri);
+        return null;
+        }
         // Once we know the ID of the new row in the table,
         // return the new URI with the ID appended to the end of it
-        return ContentUris.withAppendedId(uri, newRowId);
+        return ContentUris.withAppendedId(uri, id);
     }
 
     /**
