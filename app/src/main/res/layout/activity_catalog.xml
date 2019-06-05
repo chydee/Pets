@@ -11,7 +11,7 @@
        android:id="@+id/list_item"
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
-       android:divider="@color/colorAccent"
+       android:divider="@android:color/transparent"
        android:dividerHeight="10px"/>
 
     <android.support.design.widget.FloatingActionButton
