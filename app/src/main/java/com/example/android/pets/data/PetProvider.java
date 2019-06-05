@@ -145,6 +145,24 @@ public class PetProvider extends ContentProvider {
      */
     private Uri insertPet(Uri uri, ContentValues values) {
 
+        //Check that name is not null
+        String name = values.getAsString(PetsEntry.COLUMN_NAME);
+        if (name == null){
+            throw new IllegalArgumentException("Pet requies a name");
+        }
+        // breed can be null so theres no need to check in the provider
+
+        //Check that pet has a gender
+        Integer gender = values.getAsInteger(PetsEntry.COLUMN_GENDER);
+        if (gender == null){
+            throw new IllegalArgumentException("Pet should have a gender");
+        }
+        //Check that weight is not a negative value
+        int weight = values.getAsInteger(PetsEntry.COLUMN_WEIGHT);
+        if (weight < 0 ){
+            throw new IllegalArgumentException("Pet weight should be a positive value");
+        }
+
         //Get Writeable database
         SQLiteDatabase database = dbHelper.getWritableDatabase();
         // Insert the new pet with the given values
