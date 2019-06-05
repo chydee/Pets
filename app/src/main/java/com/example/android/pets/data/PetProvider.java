@@ -158,7 +158,7 @@ public class PetProvider extends ContentProvider {
             throw new IllegalArgumentException("Pet requires a valid gender");
         }
         //Check that weight is not a negative value
-        int weight = values.getAsInteger(PetsEntry.COLUMN_WEIGHT);
+        Integer weight = values.getAsInteger(PetsEntry.COLUMN_WEIGHT);
         if (weight < 0 ){
             throw new IllegalArgumentException("Pet weight should be a positive value");
         }
