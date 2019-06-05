@@ -60,9 +60,6 @@ public class CatalogActivity extends AppCompatActivity {
         // and pass the context, which is the current activity.
         PetsDbHelper mDbHelper = new PetsDbHelper(this);
 
-        // Create and/or open a database to read from it
-        SQLiteDatabase db = mDbHelper.getReadableDatabase();
-
         //Projection
         String[] projection = {
                 PetsEntry._ID,
@@ -73,11 +70,19 @@ public class CatalogActivity extends AppCompatActivity {
 
         // Perform this raw SQL query "SELECT * FROM pets"
         // to get a Cursor that contains all rows from the pets table.
-        Cursor cursor = db.query(
+        /**Cursor cursor = db.query(
                 PetsEntry.TABLE_NAME,
                 projection,
                 null,
                 null,
+                null,
+                null,
+                null
+        );*/
+
+        Cursor cursor = getContentResolver().query(
+                PetsEntry.CONTENT_URI,
+                projection,
                 null,
                 null,
                 null
