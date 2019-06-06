@@ -3,6 +3,7 @@ package com.example.android.pets;
 
 import android.app.LoaderManager;
 import android.content.ContentValues;
+import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
@@ -61,40 +62,14 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
             }
         });
 
-
-        displayDatabaseInfo();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        displayDatabaseInfo();
     }
 
-    /**
-     * Temporary helper method to display information in the onscreen TextView about the state of
-     * the pets database.
-     */
-    private void displayDatabaseInfo() {
 
-        //Projection
-        String[] projection = {
-                PetsEntry._ID,
-                PetsEntry.COLUMN_NAME,
-                PetsEntry.COLUMN_BREED,
-                PetsEntry.COLUMN_GENDER, PetsEntry.COLUMN_WEIGHT
-        };
-
-
-        Cursor cursor = getContentResolver().query(
-                PetsEntry.CONTENT_URI,     //The Content URI
-                projection,                //Column to return for each row
-                null,           //Selection Criteria
-                null,       //Selection Criteria
-                null           //The sort order of the returned row
-        );
-
-    }
 
     /**
      * Helper method to insert hardcoded pet data into the database. For debugging purposes only.
@@ -134,7 +109,6 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
             // Respond to a click on the "Insert dummy data" menu option
             case R.id.action_insert_dummy_data:
                 insertPet();
-                displayDatabaseInfo();
                 return true;
             // Respond to a click on the "Delete all entries" menu option
             case R.id.action_delete_all_entries:
@@ -147,17 +121,26 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return null;
+
+        Uri baseUri = PetsEntry.CONTENT_URI;
+
+        //Projection
+        String[] projection = {
+                PetsEntry._ID,
+                PetsEntry.COLUMN_NAME,
+                PetsEntry.COLUMN_BREED
+        };
+        return new CursorLoader(this, baseUri, projection, null, null, null);
     }
 
     @Override
-    public void onLoadFinished(android.content.Loader<Cursor> loader, Cursor data) {
-
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        mAdapter.swapCursor(data);
     }
 
     @Override
-    public void onLoaderReset(android.content.Loader<Cursor> loader) {
-
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mAdapter.swapCursor(null);
     }
 
 }
