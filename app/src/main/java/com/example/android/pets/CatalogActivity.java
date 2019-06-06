@@ -15,20 +15,25 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 
 import com.example.android.pets.data.PetContract.PetsEntry;
 
 /**
  * Displays list of pets that were entered and stored in the app.
  */
-public class CatalogActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class CatalogActivity extends AppCompatActivity implements
+        LoaderManager.LoaderCallbacks<Cursor> {
 
+    /**
+     * Identifier for the pet data loader
+     */
+    private static final int PET_LOADER = 0;
 
-    //Loader ID
-    private static final int LOADER_ID = 0;
-    //This is the Adapter being used to display the list of data
-    SimpleCursorAdapter mAdapter;
+    /**
+     * Adapter for the ListView
+     */
+    PetCursorAdapter mCursorAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,23 +41,14 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         setContentView(R.layout.activity_catalog);
 
         //Find ListView to populate
-        ListView listView = findViewById(R.id.list_view);
-        //Setup cursor adapter using cursor
-        mAdapter = new SimpleCursorAdapter(this, R.layout.list_item, null, new String[] {PetsEntry.COLUMN_NAME, PetsEntry.COLUMN_BREED}, new int[] {R.id.name, R.id.summary});
-        //Attach cursor adapter to listView
-        listView.setAdapter(mAdapter);
+        ListView petListView = findViewById(R.id.list_view);
         // Find and set empty view on the ListView, so that it only shows when the list has 0 items.
         View emptyView = findViewById(R.id.empty_view);
-        listView.setEmptyView(emptyView);
-
-        // Prepare the loader.  Either re-connect with an existing one,
-        // or start a new one.
-        getLoaderManager().initLoader(LOADER_ID, null,  this);
-
+        petListView.setEmptyView(emptyView);
 
 
         // Setup FAB to open EditorActivity
-        FloatingActionButton fab =  findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -61,13 +57,20 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
             }
         });
 
+        // Setup an Adapter to create a list item for each row of pet data in the Cursor.
+        // There is no pet data yet (until the loader finishes) so pass in null for the Cursor.
+        mCursorAdapter = new PetCursorAdapter(this, null);
+        petListView.setAdapter(mCursorAdapter);
+
+        // Kick off the loader
+        getLoaderManager().initLoader(PET_LOADER, null, this);
     }
 
 
     /**
      * Helper method to insert hardcoded pet data into the database. For debugging purposes only.
      */
-    private void insertPet(){
+    private void insertPet() {
 
         //Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
@@ -84,7 +87,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         // this is set to "null", then the framework will not insert a row when
         // there are no values).
         // The third argument is the ContentValues object containing the info for Toto.
-         getContentResolver().insert(PetsEntry.CONTENT_URI, values);
+        Uri newUri = getContentResolver().insert(PetsEntry.CONTENT_URI, values);
     }
 
     @Override
@@ -114,26 +117,30 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-
-        Uri baseUri = PetsEntry.CONTENT_URI;
-
-        //Projection
+        // Define a projection that specifies the columns from the table we care about.
         String[] projection = {
                 PetsEntry._ID,
                 PetsEntry.COLUMN_NAME,
-                PetsEntry.COLUMN_BREED
-        };
-        return new CursorLoader(this, baseUri, projection, null, null, null);
+                PetsEntry.COLUMN_BREED};
+
+        // This loader will execute the ContentProvider's query method on a background thread
+        return new CursorLoader(this,   // Parent activity context
+                PetsEntry.CONTENT_URI,   // Provider content URI to query
+                projection,             // Columns to include in the resulting Cursor
+                null,                   // No selection clause
+                null,                   // No selection arguments
+                null);                  // Default sort order
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        mAdapter.swapCursor(data);
+        // Update {@link PetCursorAdapter} with this new cursor containing updated pet data
+        mCursorAdapter.swapCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        mAdapter.swapCursor(null);
+        // Callback called when the data needs to be deleted
+        mCursorAdapter.swapCursor(null);
     }
-
 }

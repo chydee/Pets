@@ -55,6 +55,7 @@
 
     <!-- Label for dropdown menu option if the pet is male [CHAR LIMIT=20] -->
     <string name="gender_male">Male</string>
+    <string name="unknown_breed">Unknown breed</string>
 
     <!-- Label for dropdown menu option if the pet is female [CHAR LIMIT=20] -->
     <string name="gender_female">Female</string>
