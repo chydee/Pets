@@ -166,11 +166,11 @@ public class PetProvider extends ContentProvider {
         }
         // breed can be null so theres no need to check in the provider
 
-        //Check that pet has a gender
+        /*//Check that pet has a gender
         Integer gender = values.getAsInteger(PetsEntry.COLUMN_GENDER);
-        if (gender == null || !PetsEntry.isValidGender(gender)){
+        if (PetsEntry.isValidGender(gender)){
             throw new IllegalArgumentException("Pet requires a valid gender");
-        }
+        }*/
         //Check that weight is not a negative value
         Integer weight = values.getAsInteger(PetsEntry.COLUMN_WEIGHT);
         if (weight < 0 ){
