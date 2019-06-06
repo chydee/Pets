@@ -64,12 +64,6 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
 
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-
 
     /**
      * Helper method to insert hardcoded pet data into the database. For debugging purposes only.
