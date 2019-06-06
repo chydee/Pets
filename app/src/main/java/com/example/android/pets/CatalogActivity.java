@@ -25,10 +25,16 @@ import com.example.android.pets.data.PetContract.PetsEntry;
 public class CatalogActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
 
+    //This is the Adapter being used to display the list of data
+    PetCursorAdapter mAdapter;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_catalog);
+
+
 
         // Setup FAB to open EditorActivity
         FloatingActionButton fab =  findViewById(R.id.fab);
