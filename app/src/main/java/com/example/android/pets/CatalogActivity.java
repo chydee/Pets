@@ -1,21 +1,20 @@
 
 package com.example.android.pets;
 
+import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 
 import com.example.android.pets.data.PetContract.PetsEntry;
 
@@ -25,14 +24,30 @@ import com.example.android.pets.data.PetContract.PetsEntry;
 public class CatalogActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
 
+    //Loader ID
+    private static final int LOADER_ID = 0;
     //This is the Adapter being used to display the list of data
-    PetCursorAdapter mAdapter;
-
+    SimpleCursorAdapter mAdapter;
+    Cursor cursor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_catalog);
+
+        //Find ListView to populate
+        ListView listView = findViewById(R.id.list_view);
+        //Setup cursor adapter using cursor
+        mAdapter = new SimpleCursorAdapter(this, R.layout.list_item, null, new String[] {PetsEntry.COLUMN_NAME, PetsEntry.COLUMN_BREED}, new int[] {R.id.name, R.id.summary});
+        //Attach cursor adapter to listView
+        listView.setAdapter(mAdapter);
+        // Find and set empty view on the ListView, so that it only shows when the list has 0 items.
+        View emptyView = findViewById(R.id.empty_view);
+        listView.setEmptyView(emptyView);
+
+        // Prepare the loader.  Either re-connect with an existing one,
+        // or start a new one.
+        getLoaderManager().initLoader(LOADER_ID, null,  this);
 
 
 
@@ -78,15 +93,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                 null,       //Selection Criteria
                 null           //The sort order of the returned row
         );
-        //Find ListView to populate
-        ListView listView = findViewById(R.id.list_view);
-        //Setup cursor adapter using cursor
-        PetCursorAdapter cursorAdapter = new PetCursorAdapter(this, cursor);
-        //Attach cursor adapter to listView
-        listView.setAdapter(cursorAdapter);
-        // Find and set empty view on the ListView, so that it only shows when the list has 0 items.
-        View emptyView = findViewById(R.id.empty_view);
-        listView.setEmptyView(emptyView);
+
     }
 
     /**
@@ -137,19 +144,20 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         return super.onOptionsItemSelected(item);
     }
 
-    @NonNull
+
     @Override
-    public Loader<Cursor> onCreateLoader(int i, @Nullable Bundle bundle) {
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return null;
     }
 
     @Override
-    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
+    public void onLoadFinished(android.content.Loader<Cursor> loader, Cursor data) {
 
     }
 
     @Override
-    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
+    public void onLoaderReset(android.content.Loader<Cursor> loader) {
 
     }
+
 }
