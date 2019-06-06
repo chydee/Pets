@@ -1,7 +1,11 @@
 
 package com.example.android.pets;
 
+import android.app.LoaderManager;
 import android.content.ContentValues;
+import android.content.Intent;
+import android.content.Loader;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -23,7 +27,8 @@ import com.example.android.pets.data.PetsDbHelper;
 /**
  * Allows user to create a new pet or edit an existing one.
  */
-public class EditorActivity extends AppCompatActivity {
+public class EditorActivity extends AppCompatActivity implements
+        LoaderManager.LoaderCallbacks<Cursor> {
 
     /** EditText field to enter the pet's name */
     private EditText mNameEditText;
@@ -49,6 +54,20 @@ public class EditorActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
+
+        //First examine the intent that was used to launch this activity,
+        //in order to figure out if we're creating a new pet or editing an existing one
+        Intent intent = getIntent();
+        Uri contentUri = intent.getData();
+
+        //If the Intent does not contain a pet content URI, then we know we're creating a new pet
+        if (contentUri == null){
+            //This is a new pet, so change the app bar title to "Add a Pet"
+            setTitle("Add a Pet");
+        } else {
+            //Otherwise, its an existing pet change the app bar title to "Edit Pet"
+            setTitle(R.string.edit_pet_mode);
+        }
 
         dbHelper = new PetsDbHelper(this);
 
@@ -160,5 +179,20 @@ public class EditorActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
     }
 }
