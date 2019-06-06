@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 
 import com.example.android.pets.data.PetContract.PetsEntry;
 
@@ -27,7 +28,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
     //Loader ID
     private static final int LOADER_ID = 0;
     //This is the Adapter being used to display the list of data
-    PetCursorAdapter mAdapter;
+    SimpleCursorAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +38,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         //Find ListView to populate
         ListView listView = findViewById(R.id.list_view);
         //Setup cursor adapter using cursor
-        mAdapter = new PetCursorAdapter(this, null);
+        mAdapter = new SimpleCursorAdapter(this, R.layout.list_item, null, new String[] {PetsEntry.COLUMN_NAME, PetsEntry.COLUMN_BREED}, new int[] {R.id.name, R.id.summary});
         //Attach cursor adapter to listView
         listView.setAdapter(mAdapter);
         // Find and set empty view on the ListView, so that it only shows when the list has 0 items.
