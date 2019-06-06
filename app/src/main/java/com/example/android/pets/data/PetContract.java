@@ -28,7 +28,8 @@ public final class PetContract {
 
     // To prevent someone from accidentally instantiating the contract class,
     // give it an empty constructor.
-    private PetContract() {}
+    private PetContract() {
+    }
 
     public static final class PetsEntry implements BaseColumns {
         /**
@@ -51,29 +52,29 @@ public final class PetContract {
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_PETS;
 
 
-            public static final String TABLE_NAME = "pets";
-            public static final String _ID = BaseColumns._ID;
-            public static final String COLUMN_NAME = "name";
-            public static final String COLUMN_BREED = "breed";
-            public static final String COLUMN_GENDER = "gender";
-            public static final String COLUMN_WEIGHT = "weight";
+        public static final String TABLE_NAME = "pets";
+        public static final String _ID = BaseColumns._ID;
+        public static final String COLUMN_NAME = "name";
+        public static final String COLUMN_BREED = "breed";
+        public static final String COLUMN_GENDER = "gender";
+        public static final String COLUMN_WEIGHT = "weight";
 
-            //Possible values for pet's gender
-            public static final int GENDER_MALE = 1;
-            public static final int GENDER_FEMALE = 2;
-            public static final int GENDER_UNKNOWN = 0;
+        //Possible values for pet's gender
+        public static final int GENDER_MALE = 1;
+        public static final int GENDER_FEMALE = 2;
+        public static final int GENDER_UNKNOWN = 0;
 
         /**
          * Returns whether or not the given gender is {@link #GENDER_UNKNOWN}, {@link #GENDER_MALE},
          * or {@link #GENDER_FEMALE}.
          */
-        public static boolean isValidGender(int gender){
-            if (gender == GENDER_UNKNOWN || gender == GENDER_MALE || gender == GENDER_FEMALE){
+        public static boolean isValidGender(int gender) {
+            if (gender == GENDER_UNKNOWN || gender == GENDER_MALE || gender == GENDER_FEMALE) {
                 return true;
             }
             return false;
         }
 
 
-        }
+    }
 }
