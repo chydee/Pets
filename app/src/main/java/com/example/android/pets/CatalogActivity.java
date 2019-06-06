@@ -84,7 +84,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         // this is set to "null", then the framework will not insert a row when
         // there are no values).
         // The third argument is the ContentValues object containing the info for Toto.
-        Uri newUri = getContentResolver().insert(PetsEntry.CONTENT_URI, values);
+         getContentResolver().insert(PetsEntry.CONTENT_URI, values);
     }
 
     @Override

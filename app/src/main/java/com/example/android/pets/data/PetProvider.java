@@ -204,23 +204,32 @@ public class PetProvider extends ContentProvider {
         //Get a writeable database
         SQLiteDatabase database = dbHelper.getWritableDatabase();
 
+        int rowsDeleted; // To track the number of rows deleted
+
         final int match = sUriMatcher.match(uri);
+
         switch (match){
             case PETS:
-                //Notify all listener that data has changed for the PET CONTENT_URI
-                getContext().getContentResolver().notifyChange(uri, null);
                 //Delete all rows that match the selection and selectionArgs
-                return database.delete(PetsEntry.TABLE_NAME, selection, selectionArgs);
+                rowsDeleted = database.delete(PetsEntry.TABLE_NAME, selection, selectionArgs);
+                if (rowsDeleted != 0){
+                    getContext().getContentResolver().notifyChange(uri, null);
+                }
+                return rowsDeleted;
             case PET_ID:
                 //Delete a single row given by the ID in the URI
                 selection = PetsEntry._ID + "=?";
                 selectionArgs = new String[] {String.valueOf(ContentUris.parseId(uri))};
-                //Notify all listener that data has changed for the PET CONTENT_URI
-                getContext().getContentResolver().notifyChange(uri, null);
-                return database.delete(PetsEntry.TABLE_NAME, selection, selectionArgs);
+                rowsDeleted = database.delete(PetsEntry.TABLE_NAME, selection, selectionArgs);
+                if (rowsDeleted != 0){
+                    getContext().getContentResolver().notifyChange(uri, null);
+                }
+                return rowsDeleted;
             default:
                 throw new IllegalArgumentException("Deletion not supported for " + uri);
         }
+
+
     }
 
     /**
@@ -286,11 +295,15 @@ public class PetProvider extends ContentProvider {
         //Get a writeable database
         SQLiteDatabase database = dbHelper.getWritableDatabase();
 
-        //Notify all listener that data has changed for the PET CONTENT_URI
-        getContext().getContentResolver().notifyChange(uri, null);
+
         //  Update the selected pets in the pets database table with the given ContentValues
         //Update the pets table or a single pet with the given value
-        return database.update(PetsEntry.TABLE_NAME, values, selection, selectionArgs);
+       int rowsUpdated = database.update(PetsEntry.TABLE_NAME, values, selection, selectionArgs);
 
+       if (rowsUpdated != 0){
+           //Notify all listener that data has changed for the PET CONTENT_URI
+           getContext().getContentResolver().notifyChange(uri, null);
+       }
+        return rowsUpdated;
     }
 }
