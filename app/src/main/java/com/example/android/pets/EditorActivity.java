@@ -310,7 +310,7 @@ public class EditorActivity extends AppCompatActivity implements
             // Respond to a click on the "Delete" menu option
             case R.id.action_delete:
                 // Pop up confirmation dialog for deletion
-                //showDeleteConfirmationDialog();
+                showDeleteConfirmationDialog();
                 return true;
             // Respond to a click on the "Up" arrow button in the app bar
             case android.R.id.home:
@@ -444,7 +444,15 @@ public class EditorActivity extends AppCompatActivity implements
      * Perform the deletion of the pet in the database.
      */
     private void deletePet() {
-        // TODO: Implement this method
+        // an Integer variable to contain the number of rows deleted
+        int rowsDeleted;
+        rowsDeleted = getContentResolver().delete(mCurrentPetUri, null, null);
+        //Show toast which states whether or not a pet was deleted successfully
+        if (rowsDeleted == 0){
+            Toast.makeText(this, getString(R.string.not_deleted), Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, getString(R.string.deleted), Toast.LENGTH_SHORT).show();
+        }
     }
 
 }
