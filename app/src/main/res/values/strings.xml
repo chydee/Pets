@@ -64,4 +64,5 @@
     <string name="it_s_a_bit_lonely_here">It\'s a bit lonely here...</string>
     <string name="empty_view_subtitle_text">Get started by adding a pet</string>
     <string name="edit_pet_mode">Edit Pet</string>
+    <string name="add_a_pet">Add a Pet</string>
 </resources>

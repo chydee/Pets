@@ -71,7 +71,7 @@ public class EditorActivity extends AppCompatActivity implements
         //If the Intent does not contain a pet content URI, then we know we're creating a new pet
         if (mCurrentPetUri == null){
             //This is a new pet, so change the app bar title to "Add a Pet"
-            setTitle("Add a Pet");
+            setTitle(R.string.add_a_pet);
 
             mNameEditText.setText("");
             mBreedEditText.setText("");
@@ -143,14 +143,14 @@ public class EditorActivity extends AppCompatActivity implements
         String nameString = mNameEditText.getText().toString().trim();
         String breedString = mBreedEditText.getText().toString().trim();
         String weightString = mWeightEditText.getText().toString().trim();
-        String genderString = mGenderSpinner.getSelectedItem().toString().trim();
+        //String genderString = mGenderSpinner.getSelectedItem().toString().trim();
 
         // Create a ContentValues object where column names are the keys,
         // and pet attributes from the editor are the values.
         ContentValues values = new ContentValues();
         values.put(PetsEntry.COLUMN_NAME, nameString);
         values.put(PetsEntry.COLUMN_BREED, breedString);
-        values.put(PetsEntry.COLUMN_GENDER, genderString);
+        values.put(PetsEntry.COLUMN_GENDER, mGender);
         values.put(PetsEntry.COLUMN_WEIGHT, Integer.parseInt(weightString));
 
         // Insert a new pet into the provider, returning the content URI for the new pet.

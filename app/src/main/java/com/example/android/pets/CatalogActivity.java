@@ -55,6 +55,7 @@ public class CatalogActivity extends AppCompatActivity implements
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(CatalogActivity.this, EditorActivity.class);
+                //Start intent
                 startActivity(intent);
             }
         });
