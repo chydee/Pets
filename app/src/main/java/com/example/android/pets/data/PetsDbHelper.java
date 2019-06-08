@@ -9,7 +9,6 @@ import com.example.android.pets.data.PetContract.PetsEntry;
 public class PetsDbHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "shelter.db";
     public static final int DATABASE_VESION = 1;
-    public static final String COMMA = ", ";
 
 
     public PetsDbHelper(Context context){
@@ -33,8 +32,9 @@ public class PetsDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        String PETS_DELETE_ENTRIES = "DELETE FROM " + PetsEntry.TABLE_NAME;
+        //Database is still in version 1 so theres nothing to do here
+       /* String PETS_DELETE_ENTRIES = "DELETE FROM " + PetsEntry.TABLE_NAME;
         db.execSQL(PETS_DELETE_ENTRIES);
-        onCreate(db);
+        onCreate(db);*/
     }
 }

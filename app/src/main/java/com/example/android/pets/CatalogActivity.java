@@ -37,16 +37,11 @@ public class CatalogActivity extends AppCompatActivity implements
     PetCursorAdapter mCursorAdapter;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_catalog);
-
-        //Find ListView to populate
-        ListView petListView = findViewById(R.id.list_view);
-        // Find and set empty view on the ListView, so that it only shows when the list has 0 items.
-        View emptyView = findViewById(R.id.empty_view);
-        petListView.setEmptyView(emptyView);
 
 
         // Setup FAB to open EditorActivity
@@ -60,6 +55,17 @@ public class CatalogActivity extends AppCompatActivity implements
             }
         });
 
+        //Find ListView to populate
+        ListView petListView = findViewById(R.id.list_view);
+        // Find and set empty view on the ListView, so that it only shows when the list has 0 items.
+        View emptyView = findViewById(R.id.empty_view);
+        petListView.setEmptyView(emptyView);
+
+        // Setup an Adapter to create a list item for each row of pet data in the Cursor.
+        // There is no pet data yet (until the loader finishes) so pass in null for the Cursor.
+        mCursorAdapter = new PetCursorAdapter(this, null);
+        petListView.setAdapter(mCursorAdapter);
+
         petListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -72,7 +78,7 @@ public class CatalogActivity extends AppCompatActivity implements
                  * For example the URI would be content://com.example.android.pets/pets/2
                  * if the pet with id 2 was clicked on
                  */
-               Uri currentUri = ContentUris.withAppendedId(PetsEntry.CONTENT_URI, id);
+              Uri currentUri = ContentUris.withAppendedId(PetsEntry.CONTENT_URI, id);
 
                //Set the URI on the data feild of the intent
                intent.setData(currentUri);
@@ -81,11 +87,6 @@ public class CatalogActivity extends AppCompatActivity implements
                startActivity(intent);
             }
         });
-
-        // Setup an Adapter to create a list item for each row of pet data in the Cursor.
-        // There is no pet data yet (until the loader finishes) so pass in null for the Cursor.
-        mCursorAdapter = new PetCursorAdapter(this, null);
-        petListView.setAdapter(mCursorAdapter);
 
         // Kick off the loader
         getLoaderManager().initLoader(PET_LOADER, null, this);

@@ -22,7 +22,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.android.pets.data.PetContract.PetsEntry;
-import com.example.android.pets.data.PetsDbHelper;
 
 
 /**
@@ -43,12 +42,9 @@ public class EditorActivity extends AppCompatActivity implements
     /** EditText field to enter the pet's gender */
     private Spinner mGenderSpinner;
 
-    private PetsDbHelper dbHelper;
 
-    /**
-     * Identifier for the pet data loader
-     */
-    private static final int PET_LOADER = 0;
+    /** Identifier for the pet data loader */
+    private static final int EXISTING_PET_LOADER = 0;
 
     /**
      * Gender of the pet. The possible values are:
@@ -71,19 +67,22 @@ public class EditorActivity extends AppCompatActivity implements
         //If the Intent does not contain a pet content URI, then we know we're creating a new pet
         if (mCurrentPetUri == null){
             //This is a new pet, so change the app bar title to "Add a Pet"
-            setTitle(R.string.add_a_pet);
+            setTitle(getString(R.string.add_a_pet));
 
-            mNameEditText.setText("");
-            mBreedEditText.setText("");
-            mWeightEditText.setText("");
-            mGenderSpinner.setSelection(0); // Select "Unknown" gender
+            // Invalidate the options menu, so the "Delete" menu option can be hidden.
+            // (It doesn't make sense to delete a pet that hasn't been created yet.)
+            invalidateOptionsMenu();
 
-        } else {
+        }
+        if (mCurrentPetUri != null){
             //Otherwise, its an existing pet change the app bar title to "Edit Pet"
-            setTitle(R.string.edit_pet_mode);
+            setTitle(getString(R.string.edit_pet_mode));
+
+            // Initialize a loader to read the pet data from the database
+            // and display the current values in the editor
+            getLoaderManager().initLoader(EXISTING_PET_LOADER, null, this);
         }
 
-        dbHelper = new PetsDbHelper(this);
 
         // Find all relevant views that we will need to read user input from
         mNameEditText = findViewById(R.id.edit_pet_name);
@@ -94,7 +93,7 @@ public class EditorActivity extends AppCompatActivity implements
         setupSpinner();
 
         //Initialize the loader
-        getLoaderManager().initLoader(PET_LOADER, null, this);
+        getLoaderManager().initLoader(EXISTING_PET_LOADER, null, this);
     }
 
     /**
