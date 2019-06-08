@@ -420,9 +420,6 @@ public class EditorActivity extends AppCompatActivity implements
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked the "Delete" button, so delete the pet.
                 deletePet();
-
-                //Go back to catalog
-                finish();
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -444,15 +441,20 @@ public class EditorActivity extends AppCompatActivity implements
      * Perform the deletion of the pet in the database.
      */
     private void deletePet() {
-        // an Integer variable to contain the number of rows deleted
-        int rowsDeleted;
-        rowsDeleted = getContentResolver().delete(mCurrentPetUri, null, null);
-        //Show toast which states whether or not a pet was deleted successfully
-        if (rowsDeleted == 0){
-            Toast.makeText(this, getString(R.string.not_deleted), Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, getString(R.string.deleted), Toast.LENGTH_SHORT).show();
+        // Only perform the delete if this is an existing pet.
+        if (mCurrentPetUri != null) {
+            // Call the ContentResolver to delete the pet at the given content URI.
+            // Pass in null for the selection and selection args because the mCurrentPetUri
+            // content URI already identifies the pet that we want.
+            int rowsDeleted = getContentResolver().delete(mCurrentPetUri, null, null);
+            //Show toast which states whether or not a pet was deleted successfully
+            if (rowsDeleted == 0) {
+                Toast.makeText(this, getString(R.string.not_deleted), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, getString(R.string.deleted), Toast.LENGTH_SHORT).show();
+            }
         }
+        finish();
     }
 
 }
