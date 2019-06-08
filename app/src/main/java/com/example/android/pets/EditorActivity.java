@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -65,6 +66,20 @@ public class EditorActivity extends AppCompatActivity implements
      */
     private int mGender = PetsEntry.GENDER_UNKNOWN;
 
+    //Listen for whether changes were made
+    private boolean mPetHasChanged = false;
+
+    // OnTouchListener that listens for any user touches on a View, Implying that
+    //the view, and we change the mPetHasChanged boolean to true
+    private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            mPetHasChanged = true;
+            return false;
+        }
+    };
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +111,6 @@ public class EditorActivity extends AppCompatActivity implements
         mBreedEditText = (EditText) findViewById(R.id.edit_pet_breed);
         mWeightEditText = (EditText) findViewById(R.id.edit_pet_weight);
         mGenderSpinner = (Spinner) findViewById(R.id.spinner_gender);
-
 
         setupSpinner();
     }
