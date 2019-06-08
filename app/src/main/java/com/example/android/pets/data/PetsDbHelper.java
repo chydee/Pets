@@ -8,11 +8,11 @@ import com.example.android.pets.data.PetContract.PetsEntry;
 
 public class PetsDbHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "shelter.db";
-    public static final int DATABASE_VESION = 1;
+    public static final int DATABASE_VERSION = 1;
 
 
     public PetsDbHelper(Context context){
-        super(context, DATABASE_NAME, null, DATABASE_VESION);
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
 
