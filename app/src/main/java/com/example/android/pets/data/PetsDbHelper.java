@@ -10,8 +10,6 @@ public class PetsDbHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "shelter.db";
     public static final int DATABASE_VESION = 1;
     public static final String COMMA = ", ";
-    public static final String PETS_CREATE_ENTRIES = "CREATE TABLE "+ PetsEntry.TABLE_NAME + "( " + PetsEntry._ID +" INTEGER PRIMARY KEY AUTOINCREMENT"+ COMMA + PetsEntry.COLUMN_NAME + " TEXT NOT NULL" + COMMA + PetsEntry.COLUMN_BREED + " TEXT" +COMMA+ PetsEntry.COLUMN_GENDER + " INTEGER  DEFAULT 0" + COMMA + PetsEntry.COLUMN_WEIGHT + " INTEGER NOT NULL DEFAULT 0" + ")";
-
 
 
     public PetsDbHelper(Context context){

@@ -3,6 +3,7 @@ package com.example.android.pets;
 
 import android.app.LoaderManager;
 import android.content.ContentValues;
+import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
@@ -45,10 +46,17 @@ public class EditorActivity extends AppCompatActivity implements
     private PetsDbHelper dbHelper;
 
     /**
+     * Identifier for the pet data loader
+     */
+    private static final int PET_LOADER = 0;
+
+    /**
      * Gender of the pet. The possible values are:
      * 0 for unknown gender, 1 for male, 2 for female.
      */
     private int mGender = 0;
+    /** Content URI for the existing pet (null if it's a new pet) */
+    private Uri mCurrentPetUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,12 +66,18 @@ public class EditorActivity extends AppCompatActivity implements
         //First examine the intent that was used to launch this activity,
         //in order to figure out if we're creating a new pet or editing an existing one
         Intent intent = getIntent();
-        Uri contentUri = intent.getData();
+        mCurrentPetUri = intent.getData();
 
         //If the Intent does not contain a pet content URI, then we know we're creating a new pet
-        if (contentUri == null){
+        if (mCurrentPetUri == null){
             //This is a new pet, so change the app bar title to "Add a Pet"
             setTitle("Add a Pet");
+
+            mNameEditText.setText("");
+            mBreedEditText.setText("");
+            mWeightEditText.setText("");
+            mGenderSpinner.setSelection(0); // Select "Unknown" gender
+
         } else {
             //Otherwise, its an existing pet change the app bar title to "Edit Pet"
             setTitle(R.string.edit_pet_mode);
@@ -78,6 +92,9 @@ public class EditorActivity extends AppCompatActivity implements
         mGenderSpinner =  findViewById(R.id.spinner_gender);
 
         setupSpinner();
+
+        //Initialize the loader
+        getLoaderManager().initLoader(PET_LOADER, null, this);
     }
 
     /**
@@ -120,7 +137,7 @@ public class EditorActivity extends AppCompatActivity implements
     }
 
     //Get user input from EditorActivity and save it to the database
-    private void insertPet(){
+    private void savePet(){
         // Read from input fields
         // Use trim to eliminate leading or trailing white space
         String nameString = mNameEditText.getText().toString().trim();
@@ -164,7 +181,7 @@ public class EditorActivity extends AppCompatActivity implements
             // Respond to a click on the "Save" menu option
             case R.id.action_save:
                 // Save pets entry to database
-                insertPet();
+                savePet();
                 //Exit activity on save
                 finish();
                 return true;
@@ -183,16 +200,78 @@ public class EditorActivity extends AppCompatActivity implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return null;
+
+        // Since the editor shows all pet attributes, define a projection that contains
+        // all columns from the pet table
+        String[] projection = {
+                PetsEntry._ID,
+                PetsEntry.COLUMN_NAME,
+                PetsEntry.COLUMN_BREED,
+                PetsEntry.COLUMN_GENDER,
+                PetsEntry.COLUMN_WEIGHT
+        };
+
+        // This loader will execute the ContentProvider's query method on a background thread
+        return new CursorLoader(this,   // Parent activity context
+                mCurrentPetUri,   // Provider content URI to query
+                projection,             // Columns to include in the resulting Cursor
+                null,           //No selection
+                null,       // No selection arguments
+                null);
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 
+        // Bail early if the cursor is null or there is less than 1 row in the cursor
+        if (cursor == null || cursor.getCount() < 1) {
+            return;
+        }
+
+        // Proceed with moving to the first row of the cursor and reading data from it
+        // (This should be the only row in the cursor)
+        if (cursor.moveToFirst()) {
+            // Find the columns of pet attributes that we're interested in
+            int nameColumnIndex = cursor.getColumnIndex(PetsEntry.COLUMN_NAME);
+            int breedColumnIndex = cursor.getColumnIndex(PetsEntry.COLUMN_BREED);
+            int genderColumnIndex = cursor.getColumnIndex(PetsEntry.COLUMN_GENDER);
+            int weightColumnIndex = cursor.getColumnIndex(PetsEntry.COLUMN_WEIGHT);
+
+            // Extract out the value from the Cursor for the given column index
+            String name = cursor.getString(nameColumnIndex);
+            String breed = cursor.getString(breedColumnIndex);
+            int gender = cursor.getInt(genderColumnIndex);
+            int weight = cursor.getInt(weightColumnIndex);
+
+            // Update the views on the screen with the values from the database
+            mNameEditText.setText(name);
+            mBreedEditText.setText(breed);
+            mWeightEditText.setText(Integer.toString(weight));
+
+            // Gender is a dropdown spinner, so map the constant value from the database
+            // into one of the dropdown options (0 is Unknown, 1 is Male, 2 is Female).
+            // Then call setSelection() so that option is displayed on screen as the current selection.
+            switch (gender) {
+                case PetsEntry.GENDER_MALE:
+                    mGenderSpinner.setSelection(1);
+                    break;
+                case PetsEntry.GENDER_FEMALE:
+                    mGenderSpinner.setSelection(2);
+                    break;
+                default:
+                    mGenderSpinner.setSelection(0);
+                    break;
+            }
+        }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
+        // If the loader is invalidated, clear out all the data from the input fields.
+        mNameEditText.setText("");
+        mBreedEditText.setText("");
+        mWeightEditText.setText("");
+        mGenderSpinner.setSelection(0); // Select "Unknown" gender
     }
+
 }
